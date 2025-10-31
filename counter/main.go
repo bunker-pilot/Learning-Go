@@ -7,22 +7,15 @@ import (
 
 func main() {
 	data , _ := os.ReadFile("./words.txt")
-	content := string(data)
+	fmt.Println(CountWords(data))
+}
 
-	i:=0
-	start :=0
-	words := []string{}
-	for i < len(content){
-		start = i
-		for{
-			if content[i] != 10 && content[i] !=32{
-				i +=1
-			} else{
-				words = append(words, content[start:i])
-				break
-			}
+func CountWords(data []byte) int{
+	counter :=0
+	for _ , i := range data{
+		if i ==' '{
+			counter +=1
 		}
-		
 	}
-	fmt.Println(len(words))
+	return counter
 }
