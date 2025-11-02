@@ -8,12 +8,26 @@ import (
 )
 
 func main() {
-	data , err := os.ReadFile("./words.txt")
+	data , err := os.Open("./words.txt")
 	log.SetFlags(0)
 	if err != nil{
 		log.Fatalln("Failed to read file:", err)
 	}
-	fmt.Println(CountWords(data))
+	defer data.Close()
+	Printfile(data)
+}
+
+func Printfile(file *os.File)  {
+	const bufferSize =1024
+	buffer := make([]byte , bufferSize)
+	for{
+		size , err := file.Read(buffer)
+		if err !=nil{
+			break
+		}
+		fmt.Print(string(buffer[:size]))
+		
+	}
 }
 
 func CountWords(data []byte) int{
