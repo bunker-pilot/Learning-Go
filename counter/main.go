@@ -1,12 +1,11 @@
 package main
 
 import (
+	"bufio"
 	"bytes"
 	"fmt"
-	"io"
 	"log"
 	"os"
-	"unicode"
 )
 
 func main() {
@@ -20,24 +19,12 @@ func main() {
 }
 
 func Countfile(file *os.File) int  {
-	const bufferSize =5
 	word := 0
-	buffer := make([]byte , bufferSize)
-	isWord := false
-	for{
-		size , err := file.Read(buffer)
-		if err ==io.EOF{
-			break
-		}else if err != nil{
-			log.Fatal(err)
-		}
-		isWord = !unicode.IsSpace(rune(buffer[0])) && isWord
-		pancake :=CountWords(buffer[:size])
-		if isWord{
-			word -=1
-		}
-		word += pancake
-		isWord = !unicode.IsSpace(rune(buffer[size -1]))
+	scanner := bufio.NewScanner(file)
+	scanner.Split(bufio.ScanWords)
+
+	for scanner.Scan(){
+		word +=1
 	}
 	return word
 }
