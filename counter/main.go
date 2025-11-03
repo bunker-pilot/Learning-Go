@@ -3,8 +3,10 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"io"
 	"log"
 	"os"
+	"unicode"
 )
 
 func main() {
@@ -14,20 +16,30 @@ func main() {
 		log.Fatalln("Failed to read file:", err)
 	}
 	defer data.Close()
-	Printfile(data)
+	fmt.Print(Countfile(data))
 }
 
-func Printfile(file *os.File)  {
-	const bufferSize =1024
+func Countfile(file *os.File) int  {
+	const bufferSize =5
+	word := 0
 	buffer := make([]byte , bufferSize)
+	isWord := false
 	for{
 		size , err := file.Read(buffer)
-		if err !=nil{
+		if err ==io.EOF{
 			break
+		}else if err != nil{
+			log.Fatal(err)
 		}
-		fmt.Print(string(buffer[:size]))
-		
+		isWord = !unicode.IsSpace(rune(buffer[0])) && isWord
+		pancake :=CountWords(buffer[:size])
+		if isWord{
+			word -=1
+		}
+		word += pancake
+		isWord = !unicode.IsSpace(rune(buffer[size -1]))
 	}
+	return word
 }
 
 func CountWords(data []byte) int{
