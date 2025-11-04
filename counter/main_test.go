@@ -1,6 +1,7 @@
 package main_test
 
 import (
+	"strings"
 	"testing"
 
 	counter "github.com/erfan-flash/Learning-Go"
@@ -41,7 +42,7 @@ func TestCountwords(t *testing.T) {
 	}
 	for _ , tc := range testCases{
 		t.Run(tc.name , func(t *testing.T) {
-			result := counter.CountWords([]byte(tc.input))
+			result := counter.CountWords(strings.NewReader(tc.input))
 		if result != tc.expected{
 		t.Error("Expected:", tc.expected, "got:", result)
 		}})

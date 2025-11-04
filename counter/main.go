@@ -2,8 +2,8 @@ package main
 
 import (
 	"bufio"
-	"bytes"
 	"fmt"
+	"io"
 	"log"
 	"os"
 )
@@ -15,10 +15,10 @@ func main() {
 		log.Fatalln("Failed to read file:", err)
 	}
 	defer data.Close()
-	fmt.Print(Countfile(data))
+	fmt.Print(CountWords(data))
 }
 
-func Countfile(file *os.File) int  {
+func CountWords(file io.Reader) int  {
 	word := 0
 	scanner := bufio.NewScanner(file)
 	scanner.Split(bufio.ScanWords)
@@ -27,9 +27,4 @@ func Countfile(file *os.File) int  {
 		word +=1
 	}
 	return word
-}
-
-func CountWords(data []byte) int{
-	words := bytes.Fields(data)
-	return len(words)
 }
