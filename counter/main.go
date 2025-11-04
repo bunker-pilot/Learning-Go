@@ -9,13 +9,41 @@ import (
 )
 
 func main() {
-	data , err := os.Open("./words.txt")
 	log.SetFlags(0)
+	total := 0
+	count := 0
+	filenames := os.Args[1:]
+	errorhappend := false
+	for _ , name := range filenames{
+		count , err := CountWordsInFile(name)
+		if err != nil{
+			fmt.Fprintln(os.Stderr , "counter:", err)
+			errorhappend = true
+			continue
+		}
+		fmt.Println(name , ":", count)
+		total += count
+	}
+	if len(filenames) == 0{
+		countedWords := CountWords(os.Stdin)
+		fmt.Println(countedWords)
+	}
+	if len(filenames) >1 {
+			fmt.Println("total:", total)
+		}
+	if errorhappend{
+		os.Exit(1)
+	}
+
+}
+
+func CountWordsInFile(filename string) (int, error){
+	data , err := os.Open(filename)
 	if err != nil{
-		log.Fatalln("Failed to read file:", err)
+		return 0 , err
 	}
 	defer data.Close()
-	fmt.Print(CountWords(data))
+	return  CountWords(data) , nil
 }
 
 func CountWords(file io.Reader) int  {
@@ -26,5 +54,5 @@ func CountWords(file io.Reader) int  {
 	for scanner.Scan(){
 		word +=1
 	}
-	return word
+	return word 
 }
