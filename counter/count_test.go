@@ -48,3 +48,36 @@ func TestCountwords(t *testing.T) {
 		}})
 	}
 }
+
+func TestCountLines(t *testing.T) {
+	testcases := []struct{
+		name string
+		input string
+		expect int
+	}{
+		{
+			name: "Simple words, 1 line",
+			input: "One Two Three, Simple? \n",
+			expect: 1,
+		},
+		{
+			name: "Empty",
+			input: "",
+			expect: 0,
+		},
+		{
+			name: "No new lines",
+			input: "No new lines baby",
+			expect: 0,
+		},
+	}
+	for _, tc := range testcases{
+		t.Run(tc.name , func(t *testing.T) {
+			r :=strings.NewReader(tc.input)
+			result := counter.CountLines(r)
+			if result != tc.expect {
+				t.Error("Expected:", tc.expect , "Got:",result)
+			}
+		})
+	}
+}

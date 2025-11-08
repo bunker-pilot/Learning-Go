@@ -15,13 +15,27 @@ func CountWordsInFile(filename string) (int, error) {
 	return CountWords(data), nil
 }
 
-func CountWords(file io.Reader) int {
+func CountWords(r io.Reader) int {
 	word := 0
-	scanner := bufio.NewScanner(file)
+	scanner := bufio.NewScanner(r)
 	scanner.Split(bufio.ScanWords)
 
 	for scanner.Scan() {
 		word += 1
 	}
 	return word
+}
+func CountLines(r io.Reader) int {
+	lines := 0 
+	reader := bufio.NewReader(r)
+	for {
+		r ,_ ,err:=reader.ReadRune()
+		if err != nil{
+			break
+		}
+		if r =='\n'{
+			lines+=1
+		}
+	}
+	return lines
 }
