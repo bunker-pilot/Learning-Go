@@ -41,11 +41,6 @@ func CountLines(r io.Reader) int {
 }
 
 func Countbytes(r io.Reader) int {
-	bytes := 0 
-	scanner := bufio.NewScanner(r)
-	scanner.Split(bufio.ScanBytes)
-	for scanner.Scan(){
-		bytes +=1
-	}
-	return bytes
+	counter , _ := io.Copy(io.Discard , r)
+	return int(counter)
 }

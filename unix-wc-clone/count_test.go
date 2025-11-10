@@ -91,7 +91,23 @@ func TestCountBytes(t *testing.T) {
 		name: "five words",
 		input: "one two three four five",
 		expect: 23,
-	},}
+	},{
+		name: "Empty",
+		input: "",
+		expect: 0,
+	},{
+		name: "All spaces",
+		input: "     ",
+		expect: 5,
+	},{
+		name: "New lines and words",
+		input: "one\ntwo\nthree\nfour\n\t",
+		expect: 20,
+	},{
+		name: "Unicode",
+		input: "ãé",
+		expect: 4,
+	}}
 	for _, tc := range testcases{
 		t.Run(tc.name , func(t *testing.T) {
 			r :=strings.NewReader(tc.input)
