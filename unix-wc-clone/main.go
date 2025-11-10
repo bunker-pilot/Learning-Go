@@ -12,14 +12,14 @@ func main() {
 	filenames := os.Args[1:]
 	errorhappend := false
 	for _ , name := range filenames{
-		count , err := CountWordsInFile(name)
+		count , err := CountFile(name)
 		if err != nil{
 			fmt.Fprintln(os.Stderr , "counter:", err)
 			errorhappend = true
 			continue
 		}
 		fmt.Println(name , ":", count)
-		total += count
+		total += count.Words
 	}
 	if len(filenames) == 0{
 		countedWords := CountWords(os.Stdin)

@@ -5,14 +5,25 @@ import (
 	"io"
 	"os"
 )
-
-func CountWordsInFile(filename string) (int, error) {
+type Counts struct{
+	Bytes int
+	Words int
+	Lines int
+}
+func CountFile(filename string) (Counts, error) {
 	data, err := os.Open(filename)
 	if err != nil {
-		return 0, err
+		return Counts{}, err
 	}
 	defer data.Close()
-	return CountWords(data), nil
+	words := CountWords(data)
+	lines := CountLines(data)
+	bytes := Countbytes(data)
+	return Counts{
+		Bytes: bytes,
+		Words: words,
+		Lines: lines,
+	}, nil
 }
 
 func CountWords(r io.Reader) int {
