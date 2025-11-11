@@ -22,8 +22,9 @@ func main() {
 		total += count.Words
 	}
 	if len(filenames) == 0{
-		countedWords := CountWords(os.Stdin)
-		fmt.Println(countedWords)
+		input := os.Stdin
+		counts := GetCounts(input)
+		fmt.Printf("words: %v, lines: %v, bytes: %v" , counts.Words , counts.Lines , counts.Bytes)
 	}
 	if len(filenames) >1 {
 			fmt.Println("total:", total)

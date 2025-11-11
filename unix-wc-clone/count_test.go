@@ -42,7 +42,7 @@ func TestCountwords(t *testing.T) {
 	}
 	for _ , tc := range testCases{
 		t.Run(tc.name , func(t *testing.T) {
-			result := counter.CountWords(strings.NewReader(tc.input))
+			result := counter.GetCounts(strings.NewReader(tc.input)).Words
 		if result != tc.expected{
 		t.Error("Expected:", tc.expected, "got:", result)
 		}})
@@ -74,7 +74,7 @@ func TestCountLines(t *testing.T) {
 	for _, tc := range testcases{
 		t.Run(tc.name , func(t *testing.T) {
 			r :=strings.NewReader(tc.input)
-			result := counter.CountLines(r)
+			result := counter.GetCounts(r).Lines
 			if result != tc.expect {
 				t.Error("Expected:", tc.expect , "Got:",result)
 			}
@@ -111,10 +111,28 @@ func TestCountBytes(t *testing.T) {
 	for _, tc := range testcases{
 		t.Run(tc.name , func(t *testing.T) {
 			r :=strings.NewReader(tc.input)
-			result := counter.Countbytes(r)
+			result := counter.GetCounts(r).Bytes
 			if result != tc.expect {
 				t.Error("Expected:", tc.expect , "Got:",result)
 			}
 		})
+	}
+}
+
+func TestGetCounts(t *testing.T){
+	testcases := [] struct {
+		name string
+		input string
+		expect counter.Counts
+	}{}
+
+	for _, tc := range testcases{
+		t.Run(tc.name , func(t *testing.T) {
+			r := strings.NewReader(tc.input)
+			result := counter.GetCounts(r)
+			if result != tc.expect{
+				t.Errorf("Expected: %v , Got: %v" , tc.expect, result)
+			}
+		} )
 	}
 }
