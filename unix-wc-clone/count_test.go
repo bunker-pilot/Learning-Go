@@ -142,6 +142,7 @@ func TestPrintCounts (t *testing.T){
 	type inputs struct{
 		counts counter.Counts
 		filename []string
+		opts counter.DisplayOptions
 	}
 	testcases := []struct {
 		name string
@@ -156,7 +157,8 @@ func TestPrintCounts (t *testing.T){
 					Words: 5,
 					Bytes: 23,
 				},
-				filename: []string{"words.txt"},},
+				filename: []string{"words.txt"},
+			},
 			expect: "1 5 23 words.txt\n",
 		},
 		{
@@ -167,15 +169,68 @@ func TestPrintCounts (t *testing.T){
 					Words: 20,
 					Bytes: 25,
 				},
+				opts: counter.DisplayOptions{
+					ShowBytes: true,
+					ShowLines: true,
+					ShowWords: true,
+				},
 			},
-			expect: "2 20 25 \n",
+			expect: "2 20 25\n",
+		},{
+			name: "show lines words.txt",
+			input: inputs{
+				counts: counter.Counts{
+					Lines: 1,
+					Words: 5,
+					Bytes: 23,
+				},
+				filename: []string{"words.txt"},
+				opts: counter.DisplayOptions{
+					ShowBytes: false,
+					ShowLines: true,
+					ShowWords: false,
+				},
+			},
+			expect: "1 words.txt\n",
+		},{
+			name: "show bytes words.txt",
+			input: inputs{
+				counts: counter.Counts{
+					Lines: 1,
+					Words: 5,
+					Bytes: 23,
+				},
+				filename: []string{"words.txt"},
+				opts: counter.DisplayOptions{
+					ShowBytes: true,
+					ShowLines: false,
+					ShowWords: false,
+				},
+			},
+			expect: "23 words.txt\n",
+		},{
+			name: "show words words.txt",
+			input: inputs{
+				counts: counter.Counts{
+					Lines: 1,
+					Words: 5,
+					Bytes: 23,
+				},
+				filename: []string{"words.txt"},
+				opts: counter.DisplayOptions{
+					ShowBytes: false,
+					ShowLines: false,
+					ShowWords: true,
+				},
+			},
+			expect: "5 words.txt\n",
 		},
 	}
 
 	for _, tc :=range testcases{
 		t.Run(tc.name , func(t *testing.T) {
 			buffer := &bytes.Buffer{}
-			tc.input.counts.Print(buffer  , tc.input.filename...)
+			tc.input.counts.Print(buffer  ,tc.input.opts ,tc.input.filename...)
 
 			if tc.expect != buffer.String(){
 				t.Errorf("Expected: %v  Got : %v", tc.expect , buffer.String())

@@ -5,24 +5,58 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strconv"
+	"strings"
 )
 type Counts struct{
 	Bytes int
 	Words int
 	Lines int
 }
+type DisplayOptions struct{
+	ShowBytes bool
+	ShowWords bool
+	ShowLines bool
+}
+func (d DisplayOptions) ShouldShowLines()bool{
+	if !d.ShowBytes && !d.ShowLines && !d.ShowWords{
+		return true
+	}
+	return d.ShowLines
+}
+func (d DisplayOptions) ShouldShowWords()bool{
+	if !d.ShowLines && !d.ShowBytes && !d.ShowWords{
+		return true
+	}
+	return d.ShowWords
+}
+func (d DisplayOptions) ShoulShowBytes()bool{
+	if !d.ShowBytes && !d.ShowLines && !d.ShowWords{
+		return  true
+	}
+	return d.ShowBytes
+}
+
 func (c Counts) Add(other Counts) Counts{
 	c.Lines += other.Lines
 	c.Words += other.Words
 	c.Bytes += other.Bytes
 	return c
 }
-func (c Counts) Print(w io.Writer , filenames ...string){
-	fmt.Fprintf(w,"%v %v %v ", c.Lines, c.Words, c.Bytes )
-	for _ , name := range filenames{
-		fmt.Fprint(w , name)
+func (c Counts) Print(w io.Writer ,opts DisplayOptions ,suffixes ...string){
+	xs := []string{}
+	if opts.ShouldShowLines(){
+		xs = append(xs, strconv.Itoa(c.Lines))
 	}
-	fmt.Fprintf(w , "\n")
+	if opts.ShouldShowWords() {
+		xs = append(xs, strconv.Itoa(c.Words))
+	}
+	if opts.ShoulShowBytes(){
+		xs =append(xs, strconv.Itoa(c.Bytes))
+	}
+	xs = append(xs, suffixes...)
+	line :=strings.Join(xs , " ")
+	fmt.Fprintln(w  , line)
 }
 func GetCounts(file io.ReadSeeker) Counts{
 	const OffsetSeek = 0
