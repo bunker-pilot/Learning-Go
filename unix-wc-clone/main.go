@@ -19,11 +19,7 @@ func main() {
 			continue
 		}
 		count.Print(os.Stdout,name)
-		totals = Counts{
-			Bytes: totals.Bytes + count.Bytes,
-			Words: totals.Words + count.Words,
-			Lines: totals.Lines + count.Lines,
-		}
+		totals = totals.Add(count)
 	}
 	if len(filenames) == 0{
 		GetCounts(os.Stdin).Print( os.Stdout,"")
