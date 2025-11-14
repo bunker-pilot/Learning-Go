@@ -7,6 +7,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"unicode"
 )
 type Counts struct{
 	Bytes int
@@ -59,17 +60,28 @@ func (c Counts) Print(w io.Writer ,opts DisplayOptions ,suffixes ...string){
 	fmt.Fprintln(w  , line)
 }
 func GetCounts(file io.ReadSeeker) Counts{
-	const OffsetSeek = 0
-	words := CountWords(file)
-	file.Seek(OffsetSeek , io.SeekStart)
-	lines := CountLines(file)
-	file.Seek(OffsetSeek, io.SeekStart)
-	bytes := Countbytes(file)
-	return Counts{
-		Bytes: bytes,
-		Words: words,
-		Lines: lines,
+	res := Counts{}
+	isInsideWord :=false
+	reader := bufio.NewReader(file)
+
+	for {
+		r , size, err :=reader.ReadRune()
+		if err !=nil{
+			break
+		}
+		res.Bytes += size
+		if r == '\n'{
+			res.Lines +=1
+		}
+		isSpace := unicode.IsSpace(r)
+
+		if !isSpace && !isInsideWord{
+			res.Words +=1
+		}
+		isInsideWord =!isSpace
 	}
+	
+	return res
 }
 func CountFile(filename string) (Counts, error) {
 	data, err := os.Open(filename)
