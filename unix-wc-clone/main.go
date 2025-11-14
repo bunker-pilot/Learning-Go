@@ -8,7 +8,7 @@ import (
 
 func main() {
 	log.SetFlags(0)
-	total := 0
+	totals := Counts{}
 	filenames := os.Args[1:]
 	errorhappend := false
 	for _ , name := range filenames{
@@ -18,16 +18,18 @@ func main() {
 			errorhappend = true
 			continue
 		}
-		fmt.Println(name , ":", count)
-		total += count.Words
+		count.Print(os.Stdout,name)
+		totals = Counts{
+			Bytes: totals.Bytes + count.Bytes,
+			Words: totals.Words + count.Words,
+			Lines: totals.Lines + count.Lines,
+		}
 	}
 	if len(filenames) == 0{
-		input := os.Stdin
-		counts := GetCounts(input)
-		fmt.Printf("words: %v, lines: %v, bytes: %v" , counts.Words , counts.Lines , counts.Bytes)
+		GetCounts(os.Stdin).Print( os.Stdout,"")
 	}
 	if len(filenames) >1 {
-			fmt.Println("total:", total)
+		totals.Print(os.Stdout,"totals")
 		}
 	if errorhappend{
 		os.Exit(1)

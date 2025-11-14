@@ -1,6 +1,7 @@
 package main_test
 
 import (
+	"bytes"
 	"strings"
 	"testing"
 
@@ -134,5 +135,52 @@ func TestGetCounts(t *testing.T){
 				t.Errorf("Expected: %v , Got: %v" , tc.expect, result)
 			}
 		} )
+	}
+}
+
+func TestPrintCounts (t *testing.T){
+	type inputs struct{
+		counts counter.Counts
+		filename string
+	}
+	testcases := []struct {
+		name string
+		input inputs
+		expect string
+	}{
+		{
+			name: "simple five words.txt",
+			input: inputs{
+				counts: counter.Counts{
+					Lines: 1,
+					Words: 5,
+					Bytes: 23,
+				},
+				filename: "words.txt",},
+			expect: "1 5 23 words.txt",
+		},
+		{
+			name: "Empty filename",
+			input: inputs{
+				counts: counter.Counts{
+					Lines: 2,
+					Words: 20,
+					Bytes: 25,
+				},
+				filename: "",
+			},
+			expect: "2 20 25 ",
+		},
+	}
+
+	for _, tc :=range testcases{
+		t.Run(tc.name , func(t *testing.T) {
+			buffer := &bytes.Buffer{}
+			tc.input.counts.Print(buffer  , tc.input.filename)
+
+			if tc.expect != buffer.String(){
+				t.Errorf("Expected: %v  Got : %v", tc.expect , buffer.String())
+			}
+		})
 	}
 }
