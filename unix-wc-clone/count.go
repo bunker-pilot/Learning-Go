@@ -12,8 +12,12 @@ type Counts struct{
 	Lines int
 }
 
-func (c Counts) Print(w io.Writer , filename string){
-	fmt.Fprintf(w,"%v %v %v %v \n", c.Lines, c.Words, c.Bytes , filename)
+func (c Counts) Print(w io.Writer , filenames ...string){
+	fmt.Fprintf(w,"%v %v %v ", c.Lines, c.Words, c.Bytes )
+	for _ , name := range filenames{
+		fmt.Fprint(w , name)
+	}
+	fmt.Fprintf(w , "\n")
 }
 func GetCounts(file io.ReadSeeker) Counts{
 	const OffsetSeek = 0
