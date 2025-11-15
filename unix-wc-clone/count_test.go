@@ -159,7 +159,7 @@ func TestPrintCounts (t *testing.T){
 				},
 				filename: []string{"words.txt"},
 			},
-			expect: "1 5 23 words.txt\n",
+			expect: "1\t5\t23\t words.txt\n",
 		},
 		{
 			name: "Empty filename",
@@ -175,7 +175,7 @@ func TestPrintCounts (t *testing.T){
 					ShowWords: true,
 				},
 			},
-			expect: "2 20 25\n",
+			expect: "2\t20\t25\t \n",
 		},{
 			name: "show lines words.txt",
 			input: inputs{
@@ -191,7 +191,7 @@ func TestPrintCounts (t *testing.T){
 					ShowWords: false,
 				},
 			},
-			expect: "1 words.txt\n",
+			expect: "1\t words.txt\n",
 		},{
 			name: "show bytes words.txt",
 			input: inputs{
@@ -207,7 +207,7 @@ func TestPrintCounts (t *testing.T){
 					ShowWords: false,
 				},
 			},
-			expect: "23 words.txt\n",
+			expect: "23\t words.txt\n",
 		},{
 			name: "show words words.txt",
 			input: inputs{
@@ -223,7 +223,7 @@ func TestPrintCounts (t *testing.T){
 					ShowWords: true,
 				},
 			},
-			expect: "5 words.txt\n",
+			expect: "5\t words.txt\n",
 		},
 	}
 
