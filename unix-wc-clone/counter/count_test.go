@@ -1,11 +1,12 @@
-package main_test
+package counter_test
 
 import (
 	"bytes"
 	"strings"
 	"testing"
 
-	counter "github.com/erfan-flash/Learning-Go"
+	"github.com/erfan-flash/Learning-Go/counter"
+	"github.com/erfan-flash/Learning-Go/display"
 )
 
 func TestCountwords(t *testing.T) {
@@ -142,7 +143,7 @@ func TestPrintCounts (t *testing.T){
 	type inputs struct{
 		counts counter.Counts
 		filename []string
-		opts counter.DisplayOptions
+		opts display.Options
 	}
 	testcases := []struct {
 		name string
@@ -169,7 +170,7 @@ func TestPrintCounts (t *testing.T){
 					Words: 20,
 					Bytes: 25,
 				},
-				opts: counter.DisplayOptions{
+				opts: display.Options{
 					ShowBytes: true,
 					ShowLines: true,
 					ShowWords: true,
@@ -185,7 +186,7 @@ func TestPrintCounts (t *testing.T){
 					Bytes: 23,
 				},
 				filename: []string{"words.txt"},
-				opts: counter.DisplayOptions{
+				opts: display.Options{
 					ShowBytes: false,
 					ShowLines: true,
 					ShowWords: false,
@@ -201,7 +202,7 @@ func TestPrintCounts (t *testing.T){
 					Bytes: 23,
 				},
 				filename: []string{"words.txt"},
-				opts: counter.DisplayOptions{
+				opts: display.Options{
 					ShowBytes: true,
 					ShowLines: false,
 					ShowWords: false,
@@ -217,7 +218,7 @@ func TestPrintCounts (t *testing.T){
 					Bytes: 23,
 				},
 				filename: []string{"words.txt"},
-				opts: counter.DisplayOptions{
+				opts: display.Options{
 					ShowBytes: false,
 					ShowLines: false,
 					ShowWords: true,

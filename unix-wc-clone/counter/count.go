@@ -1,4 +1,4 @@
-package main
+package counter
 
 import (
 	"bufio"
@@ -8,60 +8,21 @@ import (
 	"strconv"
 	"strings"
 	"unicode"
+
+	"github.com/erfan-flash/Learning-Go/display"
 )
 type Counts struct{
 	Bytes int
 	Words int
 	Lines int
 }
-type DisplayOptions struct{
-	ShowHeaders bool
-	ShowBytes   bool
-	ShowWords   bool
-	ShowLines   bool
-}
-func (d DisplayOptions) ShouldShowHeaders() string{
-	headers := []string{}
-	if !d.ShowLines && !d.ShowBytes && !d.ShowWords{
-		return "Lines\tWords\tBytes\t"
-	}
-	if d.ShowLines{
-		headers = append(headers, "Lines")
-	}
-	if d.ShowWords {
-		headers = append(headers, "Words")
-	}
-	if d.ShowBytes{
-		headers = append(headers, "Bytes")
-	}
-	what :=strings.Join(headers, "\t") + "\t"
-	return what
-}
-func (d DisplayOptions) ShouldShowLines()bool{
-	if !d.ShowBytes && !d.ShowLines && !d.ShowWords{
-		return true
-	}
-	return d.ShowLines
-}
-func (d DisplayOptions) ShouldShowWords()bool{
-	if !d.ShowLines && !d.ShowBytes && !d.ShowWords{
-		return true
-	}
-	return d.ShowWords
-}
-func (d DisplayOptions) ShoulShowBytes()bool{
-	if !d.ShowBytes && !d.ShowLines && !d.ShowWords{
-		return  true
-	}
-	return d.ShowBytes
-}
-func (c Counts) Add(other Counts) Counts{
+func (c Counts) Add(other Counts) Counts {
 	c.Lines += other.Lines
 	c.Words += other.Words
 	c.Bytes += other.Bytes
 	return c
 }
-func (c Counts) Print(w io.Writer ,opts DisplayOptions ,suffixes ...string){
+func (c Counts) Print(w io.Writer ,opts display.Options ,suffixes ...string){
 	xs := []string{}
 	var what string
 	if opts.ShouldShowLines(){
@@ -75,10 +36,11 @@ func (c Counts) Print(w io.Writer ,opts DisplayOptions ,suffixes ...string){
 	}
 	if opts.ShowHeaders{
 		what = opts.ShouldShowHeaders()
+		fmt.Fprintln(w, what)
 	}
 	line :=strings.Join(xs , "\t") + "\t"
 	suffixesStr := strings.Join(suffixes , " ")
-	fmt.Fprintln(w, what)
+	
 	fmt.Fprintln(w  , line , suffixesStr)
 }
 func GetCounts(file io.Reader) Counts{

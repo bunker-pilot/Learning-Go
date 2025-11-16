@@ -6,11 +6,14 @@ import (
 	"log"
 	"os"
 	"text/tabwriter"
+
+	"github.com/erfan-flash/Learning-Go/counter"
+	"github.com/erfan-flash/Learning-Go/display"
 )
 
 
 func main() {
-	opts := DisplayOptions{}
+	opts := display.Options{}
 	log.SetFlags(0)
 	wr := tabwriter.NewWriter(os.Stdout , 0, 8, 1 , ' ', tabwriter.AlignRight)
 	flag.BoolVar(
@@ -22,11 +25,11 @@ func main() {
 	flag.BoolVar(
 		&opts.ShowLines,"l" , false ,"Used to toggle whether or not to show the line count")
 	flag.Parse()
-	totals := Counts{}
+	totals := counter.Counts{}
 	filenames := flag.Args()
 	errorhappend := false
 	for _ , name := range filenames{
-		count , err := CountFile(name)
+		count , err := counter.CountFile(name)
 		if err != nil{
 			fmt.Fprintln(os.Stderr , "counter:", err)
 			errorhappend = true
@@ -36,7 +39,7 @@ func main() {
 		totals = totals.Add(count)
 	}
 	if len(filenames) == 0{
-		GetCounts(os.Stdin).Print(wr, opts, "")
+		counter.GetCounts(os.Stdin).Print(wr, opts, "")
 	}
 	if len(filenames) >1 {
 		totals.Print(wr,opts,"totals")
