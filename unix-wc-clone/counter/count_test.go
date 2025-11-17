@@ -143,7 +143,7 @@ func TestPrintCounts (t *testing.T){
 	type inputs struct{
 		counts counter.Counts
 		filename []string
-		opts display.Options
+		opts display.NewOptions
 	}
 	testcases := []struct {
 		name string
@@ -170,7 +170,7 @@ func TestPrintCounts (t *testing.T){
 					Words: 20,
 					Bytes: 25,
 				},
-				opts: display.Options{
+				opts: display.NewOptions{
 					ShowBytes: true,
 					ShowLines: true,
 					ShowWords: true,
@@ -186,7 +186,7 @@ func TestPrintCounts (t *testing.T){
 					Bytes: 23,
 				},
 				filename: []string{"words.txt"},
-				opts: display.Options{
+				opts: display.NewOptions{
 					ShowBytes: false,
 					ShowLines: true,
 					ShowWords: false,
@@ -202,7 +202,7 @@ func TestPrintCounts (t *testing.T){
 					Bytes: 23,
 				},
 				filename: []string{"words.txt"},
-				opts: display.Options{
+				opts: display.NewOptions{
 					ShowBytes: true,
 					ShowLines: false,
 					ShowWords: false,
@@ -218,7 +218,7 @@ func TestPrintCounts (t *testing.T){
 					Bytes: 23,
 				},
 				filename: []string{"words.txt"},
-				opts: display.Options{
+				opts: display.NewOptions{
 					ShowBytes: false,
 					ShowLines: false,
 					ShowWords: true,
@@ -231,7 +231,7 @@ func TestPrintCounts (t *testing.T){
 	for _, tc :=range testcases{
 		t.Run(tc.name , func(t *testing.T) {
 			buffer := &bytes.Buffer{}
-			tc.input.counts.Print(buffer  ,tc.input.opts ,tc.input.filename...)
+			tc.input.counts.Print(buffer  ,display.New(tc.input.opts) ,tc.input.filename...)
 
 			if tc.expect != buffer.String(){
 				t.Errorf("Expected: %v  Got : %v", tc.expect , buffer.String())

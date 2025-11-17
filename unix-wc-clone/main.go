@@ -13,17 +13,18 @@ import (
 
 
 func main() {
-	opts := display.Options{}
+	newopts := display.NewOptions{}
 	log.SetFlags(0)
 	wr := tabwriter.NewWriter(os.Stdout , 0, 8, 1 , ' ', tabwriter.AlignRight)
 	flag.BoolVar(
-		&opts.ShowHeaders , "headers" , false, "Used to toggle whether or not to show the headers")
+		&newopts.ShowHeaders , "headers" , false, "Used to toggle whether or not to show the headers")
 	flag.BoolVar(
-		&opts.ShowWords,"w" , false ,"Used to toggle whether or not to show the word count")
+		&newopts.ShowWords,"w" , false ,"Used to toggle whether or not to show the word count")
 	flag.BoolVar(
-		&opts.ShowBytes,"c" , false ,"Used to toggle whether or not to show the byte count")
+		&newopts.ShowBytes,"c" , false ,"Used to toggle whether or not to show the byte count")
 	flag.BoolVar(
-		&opts.ShowLines,"l" , false ,"Used to toggle whether or not to show the line count")
+		&newopts.ShowLines,"l" , false ,"Used to toggle whether or not to show the line count")
+	opts := display.New(newopts)
 	flag.Parse()
 	totals := counter.Counts{}
 	filenames := flag.Args()

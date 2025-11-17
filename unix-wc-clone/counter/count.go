@@ -34,8 +34,8 @@ func (c Counts) Print(w io.Writer ,opts display.Options ,suffixes ...string){
 	if opts.ShoulShowBytes(){
 		xs =append(xs, strconv.Itoa(c.Bytes))
 	}
-	if opts.ShowHeaders{
-		what = opts.ShouldShowHeaders()
+	if opts.ShouldShowHeaders(){
+		what = opts.ShowHeaders()
 		fmt.Fprintln(w, what)
 	}
 	line :=strings.Join(xs , "\t") + "\t"
