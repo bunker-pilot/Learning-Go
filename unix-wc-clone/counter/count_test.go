@@ -1,11 +1,10 @@
-package counter_test
+package counter
 
 import (
 	"bytes"
 	"strings"
 	"testing"
 
-	"github.com/erfan-flash/Learning-Go/counter"
 	"github.com/erfan-flash/Learning-Go/display"
 )
 
@@ -44,7 +43,7 @@ func TestCountwords(t *testing.T) {
 	}
 	for _ , tc := range testCases{
 		t.Run(tc.name , func(t *testing.T) {
-			result := counter.GetCounts(strings.NewReader(tc.input)).Words
+			result := GetCounts(strings.NewReader(tc.input)).words
 		if result != tc.expected{
 		t.Error("Expected:", tc.expected, "got:", result)
 		}})
@@ -76,7 +75,7 @@ func TestCountLines(t *testing.T) {
 	for _, tc := range testcases{
 		t.Run(tc.name , func(t *testing.T) {
 			r :=strings.NewReader(tc.input)
-			result := counter.GetCounts(r).Lines
+			result := GetCounts(r).lines
 			if result != tc.expect {
 				t.Error("Expected:", tc.expect , "Got:",result)
 			}
@@ -113,7 +112,7 @@ func TestCountBytes(t *testing.T) {
 	for _, tc := range testcases{
 		t.Run(tc.name , func(t *testing.T) {
 			r :=strings.NewReader(tc.input)
-			result := counter.GetCounts(r).Bytes
+			result := GetCounts(r).bytes
 			if result != tc.expect {
 				t.Error("Expected:", tc.expect , "Got:",result)
 			}
@@ -125,13 +124,13 @@ func TestGetCounts(t *testing.T){
 	testcases := [] struct {
 		name string
 		input string
-		expect counter.Counts
+		expect Counts
 	}{}
 
 	for _, tc := range testcases{
 		t.Run(tc.name , func(t *testing.T) {
 			r := strings.NewReader(tc.input)
-			result := counter.GetCounts(r)
+			result := GetCounts(r)
 			if result != tc.expect{
 				t.Errorf("Expected: %v , Got: %v" , tc.expect, result)
 			}
@@ -141,7 +140,7 @@ func TestGetCounts(t *testing.T){
 
 func TestPrintCounts (t *testing.T){
 	type inputs struct{
-		counts counter.Counts
+		counts Counts
 		filename []string
 		opts display.NewOptions
 	}
@@ -153,10 +152,10 @@ func TestPrintCounts (t *testing.T){
 		{
 			name: "simple five words.txt",
 			input: inputs{
-				counts: counter.Counts{
-					Lines: 1,
-					Words: 5,
-					Bytes: 23,
+				counts:	Counts{
+					lines: 1,
+					words: 5,
+					bytes: 23,
 				},
 				filename: []string{"words.txt"},
 			},
@@ -165,10 +164,10 @@ func TestPrintCounts (t *testing.T){
 		{
 			name: "Empty filename",
 			input: inputs{
-				counts: counter.Counts{
-					Lines: 2,
-					Words: 20,
-					Bytes: 25,
+				counts: Counts{
+					lines: 2,
+					words: 20,
+					bytes: 25,
 				},
 				opts: display.NewOptions{
 					ShowBytes: true,
@@ -180,10 +179,10 @@ func TestPrintCounts (t *testing.T){
 		},{
 			name: "show lines words.txt",
 			input: inputs{
-				counts: counter.Counts{
-					Lines: 1,
-					Words: 5,
-					Bytes: 23,
+				counts:Counts{
+					lines: 1,
+					words: 5,
+					bytes: 23,
 				},
 				filename: []string{"words.txt"},
 				opts: display.NewOptions{
@@ -196,10 +195,10 @@ func TestPrintCounts (t *testing.T){
 		},{
 			name: "show bytes words.txt",
 			input: inputs{
-				counts: counter.Counts{
-					Lines: 1,
-					Words: 5,
-					Bytes: 23,
+				counts: Counts{
+					lines: 1,
+					words: 5,
+					bytes: 23,
 				},
 				filename: []string{"words.txt"},
 				opts: display.NewOptions{
@@ -212,10 +211,10 @@ func TestPrintCounts (t *testing.T){
 		},{
 			name: "show words words.txt",
 			input: inputs{
-				counts: counter.Counts{
-					Lines: 1,
-					Words: 5,
-					Bytes: 23,
+				counts: Counts{
+					lines: 1,
+					words: 5,
+					bytes: 23,
 				},
 				filename: []string{"words.txt"},
 				opts: display.NewOptions{
@@ -242,32 +241,32 @@ func TestPrintCounts (t *testing.T){
 
 func TestAddCounts(t *testing.T){
 	type inputs struct{
-		counts counter.Counts
-		other counter.Counts
+		counts Counts
+		other Counts
 	}
 	testCases := []struct {
 		name string
 		input inputs
-		expect counter.Counts
+		expect Counts
 	}{
 		{
 			name: "Add by one",
 			input: inputs{
-				counts: counter.Counts{
-					Lines: 1,
-					Words: 5,
-					Bytes: 25,
+				counts: Counts{
+					lines: 1,
+					words: 5,
+					bytes: 25,
 				},
-				other: counter.Counts{
-					Lines: 1,
-					Words: 1,
-					Bytes: 1,
+				other: Counts{
+					lines: 1,
+					words: 1,
+					bytes: 1,
 				},
 			},
-			expect: counter.Counts{
-				Lines: 2,
-				Words: 6,
-				Bytes: 26,
+			expect: Counts{
+				lines: 2,
+				words: 6,
+				bytes: 26,
 			},
 		},
 	}

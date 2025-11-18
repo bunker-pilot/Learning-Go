@@ -12,27 +12,27 @@ import (
 	"github.com/erfan-flash/Learning-Go/display"
 )
 type Counts struct{
-	Bytes int
-	Words int
-	Lines int
+	bytes int
+	words int
+	lines int
 }
 func (c Counts) Add(other Counts) Counts {
-	c.Lines += other.Lines
-	c.Words += other.Words
-	c.Bytes += other.Bytes
+	c.lines += other.lines
+	c.words += other.words
+	c.bytes += other.bytes
 	return c
 }
 func (c Counts) Print(w io.Writer ,opts display.Options ,suffixes ...string){
 	xs := []string{}
 	var what string
 	if opts.ShouldShowLines(){
-		xs = append(xs, strconv.Itoa(c.Lines))
+		xs = append(xs, strconv.Itoa(c.lines))
 	}
 	if opts.ShouldShowWords() {
-		xs = append(xs, strconv.Itoa(c.Words))
+		xs = append(xs, strconv.Itoa(c.words))
 	}
 	if opts.ShoulShowBytes(){
-		xs =append(xs, strconv.Itoa(c.Bytes))
+		xs =append(xs, strconv.Itoa(c.bytes))
 	}
 	if opts.ShouldShowHeaders(){
 		what = opts.ShowHeaders()
@@ -52,14 +52,14 @@ func GetCounts(file io.Reader) Counts{
 		if err !=nil{
 			break
 		}
-		res.Bytes += size
+		res.bytes += size
 		if r == '\n'{
-			res.Lines +=1
+			res.lines +=1
 		}
 		isSpace := unicode.IsSpace(r)
 
 		if !isSpace && !isInsideWord{
-			res.Words +=1
+			res.words +=1
 		}
 		isInsideWord =!isSpace
 	}
@@ -75,7 +75,7 @@ func CountFile(filename string) (Counts, error) {
 	return counts , nil
 }
 
-func CountWords(r io.Reader) int {
+func Countwords(r io.Reader) int {
 	word := 0
 	scanner := bufio.NewScanner(r)
 	scanner.Split(bufio.ScanWords)
@@ -85,7 +85,7 @@ func CountWords(r io.Reader) int {
 	}
 	return word
 }
-func CountLines(r io.Reader) int {
+func Countlines(r io.Reader) int {
 	lines := 0 
 	reader := bufio.NewReader(r)
 	for {
