@@ -11,7 +11,10 @@ import (
 	"github.com/erfan-flash/Learning-Go/counter"
 	"github.com/erfan-flash/Learning-Go/display"
 )
-
+type FileCountResult struct{
+	counter counter.Counts
+	filename  string
+}
 
 func main() {
 	newopts := display.NewOptions{}
@@ -31,10 +34,10 @@ func main() {
 	totals := counter.Counts{}
 	filenames := flag.Args()
 	wg.Add(len(filenames))
+	ch := make(chan  FileCountResult)
 	errorhappend := false
-	l := sync.Mutex{}
 	for _ , name := range filenames{
-		go func ()  {
+		go func (name string)  {
 		defer wg.Done()
 		count , err := counter.CountFile(name)
 		if err != nil{
@@ -42,13 +45,22 @@ func main() {
 			errorhappend = true
 			return
 		}
-		l.Lock()
-		defer l.Unlock()
-		count.Print(wr,opts,name)
-		totals = totals.Add(count)
-	}()
+		ch <- FileCountResult{
+			filename: name,
+			counter: count,
+		}
+		
+	}(name)
 	}
-	wg.Wait()
+	go func ()  {
+		wg.Wait()
+		close(ch)
+	}()
+	for res := range ch{
+		res.counter.Print(wr,opts,res.filename)
+		totals = totals.Add(res.counter)
+	}
+	
 	if len(filenames) == 0{
 		counter.GetCounts(os.Stdin).Print(wr, opts, "")
 	}
