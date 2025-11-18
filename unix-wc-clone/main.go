@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"sync"
 	"text/tabwriter"
 
 	"github.com/erfan-flash/Learning-Go/counter"
@@ -14,6 +15,7 @@ import (
 
 func main() {
 	newopts := display.NewOptions{}
+	wg := sync.WaitGroup{}
 	log.SetFlags(0)
 	wr := tabwriter.NewWriter(os.Stdout , 0, 8, 1 , ' ', tabwriter.AlignRight)
 	flag.BoolVar(
@@ -28,17 +30,25 @@ func main() {
 	flag.Parse()
 	totals := counter.Counts{}
 	filenames := flag.Args()
+	wg.Add(len(filenames))
 	errorhappend := false
+	l := sync.Mutex{}
 	for _ , name := range filenames{
+		go func ()  {
+		defer wg.Done()
 		count , err := counter.CountFile(name)
 		if err != nil{
 			fmt.Fprintln(os.Stderr , "counter:", err)
 			errorhappend = true
-			continue
+			return
 		}
+		l.Lock()
+		defer l.Unlock()
 		count.Print(wr,opts,name)
 		totals = totals.Add(count)
+	}()
 	}
+	wg.Wait()
 	if len(filenames) == 0{
 		counter.GetCounts(os.Stdin).Print(wr, opts, "")
 	}
@@ -49,5 +59,6 @@ func main() {
 	if errorhappend{
 		os.Exit(1)
 	}
+	
 
 }
